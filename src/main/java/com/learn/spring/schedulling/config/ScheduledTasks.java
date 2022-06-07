@@ -18,4 +18,15 @@ public class ScheduledTasks {
     public void reportCurrentTime() {
         log.info("The time is now {}", dateFormat.format(new Date()));
     }
+
+    @Scheduled(cron = "0/3 * * * * *")
+    private void reportCurrentTimeInCron() {
+        this.reportCurrentTimeInCron2();
+        log.info("The time is now using cron expression {}", dateFormat.format(new Date()));
+    }
+
+
+    private void reportCurrentTimeInCron2() {
+        log.info("The time is now inner cron expression {}", dateFormat.format(new Date()));
+    }
 }
