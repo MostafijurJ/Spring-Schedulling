@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 
 @Service
@@ -14,6 +15,16 @@ public class SchedulerService {
 
     @Autowired
     private InformationService informationService;
+
+    @Autowired
+    private FileReaderService fileReaderService;
+
+    @Scheduled(fixedDelay = 30000)
+    public void readerJob() throws IOException {
+        log.info(" *********** reader job started *********** {}", new Date());
+        fileReaderService.readFileFromProperty();
+        log.info("file reading job ended at {}", new Date());
+    }
 
     @Scheduled(fixedDelay = 30000)
     public void startJob1() {

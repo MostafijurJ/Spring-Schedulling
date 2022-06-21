@@ -3,6 +3,7 @@ package com.learn.spring.schedulling.service;
 import com.learn.spring.schedulling.mapper.CommonObjectMapper;
 import com.learn.spring.schedulling.model.Information;
 import com.learn.spring.schedulling.repo.InformationRepo;
+import com.learn.spring.schedulling.utils.BufferReader;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,12 +32,17 @@ public class InformationService {
     var infos = parseCSVFile(file);
     log.info("parsed files in {}",infos);
 
+    saveInfo(infos);
+    return infos;
+  }
+
+  public void saveInfo(List<Information> infos) {
     try{
       informationRepo.saveAll(infos);
+      log.info(" list of data save to db,  data size {}",infos.size());
     }catch (Exception e){
-      log.error("Failed to save informations {}", e);
+      log.error("Failed to save information list \n",e);
     }
-    return infos;
   }
 
 
@@ -45,7 +51,7 @@ public class InformationService {
   }
 
 
-  private List<Information> parseCSVFile(final MultipartFile file) throws Exception {
+  public List<Information> parseCSVFile(final MultipartFile file) throws Exception {
     final List<Information> Informations = new ArrayList<>();
     try {
       try (final BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
@@ -53,13 +59,8 @@ public class InformationService {
         br.readLine();
         String line;
         while ((line = br.readLine()) != null) {
-          final String[] data = line.split(",");
-          final Information Information = new Information();
-          Information.setName(data[0]);
-          Information.setEmail(data[1]);
-          Information.setPhone(data[2]);
-          Information.setAddress(data[3]);
-          Informations.add(Information);
+
+          Informations.add(BufferReader.delimeter(line));
         }
         return Informations;
       }
