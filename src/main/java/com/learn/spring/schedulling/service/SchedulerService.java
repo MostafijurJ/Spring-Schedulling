@@ -6,6 +6,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
@@ -19,26 +21,28 @@ public class SchedulerService {
     @Autowired
     private FileReaderService fileReaderService;
 
+    private DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss:SSS");
+
     @Scheduled(fixedDelay = 30000)
     public void readerJob() throws IOException {
-        log.info(" *********** reader job started *********** {}", new Date());
+        log.info("file reading job start at {}", dateFormat.format(new Date()));
         fileReaderService.readFileFromProperty();
-        log.info("file reading job ended at {}", new Date());
+        log.info("file reading job ended at {}", dateFormat.format(new Date()));
     }
 
     @Scheduled(fixedDelay = 30000)
     public void startJob1() {
-        log.info("Job  one is running... \t started at {}", new Date());
+        log.info("Job  1 is started at {}", dateFormat.format(new Date()));
         informationService.updateInformationJob();
-        log.info("Job  one is running... \t ended at {}", new Date());
+        log.info("Job  1 is ended at {}", dateFormat.format(new Date()));
     }
 
 
     @Scheduled(fixedDelay = 30000)
     public void startJob2() {
-        log.info("Job  two is running... \t started at {}", new Date());
+        log.info("Job  2 is started at {}", dateFormat.format(new Date()));
         informationService.updateInformationJob2();
-        log.info("Job  two is running... \t ended at {}", new Date());
+        log.info("Job  2 is ended at {}", dateFormat.format(new Date()));
     }
 
 }
